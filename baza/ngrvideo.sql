@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 25, 2023 at 06:23 PM
+-- Generation Time: Apr 23, 2023 at 02:39 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -102,6 +102,18 @@ CREATE TABLE `ProfilUzytkownika` (
   `opis` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `ProfilUzytkownika`
+--
+
+INSERT INTO `ProfilUzytkownika` (`idProfilUzytkownika`, `idUzytkownik`, `DataRejestracji`, `url_profilowe`, `opis`) VALUES
+(3, 4, '2023-04-23', '', ''),
+(4, 5, '2023-04-23', '', ''),
+(5, 6, '2023-04-23', '', ''),
+(6, 7, '2023-04-23', '', ''),
+(7, 8, '2023-04-23', '', ''),
+(8, 9, '2023-04-23', '', '');
+
 -- --------------------------------------------------------
 
 --
@@ -127,6 +139,29 @@ CREATE TABLE `Uzytkownicy` (
   `PytaniePomocnicze` varchar(30) NOT NULL,
   `OdpowiedzPomocnicza` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `Uzytkownicy`
+--
+
+INSERT INTO `Uzytkownicy` (`idUzytkownicy`, `login`, `haslo`, `PytaniePomocnicze`, `OdpowiedzPomocnicza`) VALUES
+(4, 'test', 'test', 'adfsdf', 'dfasdf'),
+(5, '856', '756', '57', '75'),
+(6, 'test2', 'test2', '', ''),
+(7, 'frugo', 'frugo', '', ''),
+(8, 'frugo2', 'frugo2', '', ''),
+(9, '445', '454', '', '');
+
+--
+-- Triggers `Uzytkownicy`
+--
+DELIMITER $$
+CREATE TRIGGER `UsrTrigger` AFTER INSERT ON `Uzytkownicy` FOR EACH ROW BEGIN
+  INSERT INTO `ProfilUzytkownika` (`idUzytkownik`, `DataRejestracji`, `url_profilowe`, `opis`) 
+  VALUES (NEW.`idUzytkownicy`, NOW(), '', '');
+END
+$$
+DELIMITER ;
 
 --
 -- Indexes for dumped tables
@@ -226,7 +261,7 @@ ALTER TABLE `Oceny`
 -- AUTO_INCREMENT for table `ProfilUzytkownika`
 --
 ALTER TABLE `ProfilUzytkownika`
-  MODIFY `idProfilUzytkownika` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `idProfilUzytkownika` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `UlubioneFilmy`
@@ -238,7 +273,7 @@ ALTER TABLE `UlubioneFilmy`
 -- AUTO_INCREMENT for table `Uzytkownicy`
 --
 ALTER TABLE `Uzytkownicy`
-  MODIFY `idUzytkownicy` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `idUzytkownicy` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
