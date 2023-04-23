@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -26,26 +29,22 @@
     </div>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Logowanie</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Rejestracja</a>
-        </li>
-      </ul>
+					<?php
+						if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+                            echo '<li class="navbar-text">Witaj, niezalogowany</li>';
+							echo '<li class="nav-item"><a class="nav-link" href="login.php">Logowanie</a></li>';
+							echo '<li class="nav-item"><a class="nav-link" href="register.php">Rejestracja</a></li>';
+						} 
+                        else {
+                            echo '<li class="navbar-text">Witaj, '.$_SESSION["login"].'</li>';
+							echo '<li class="nav-item"><a class="nav-link" href="profil.php">Profil</a></li>';
+                            echo '<li class="nav-item"><a class="nav-link" href="logout.php">Wyloguj się</a></li>';
+						      }
+					?>
+				</ul>
     </div>
   </div>
 </nav>
-<div class="main_panel">
-    <div class="lewy">
-    </div>
-    <div class="srodek">
-
-    </div>
-    <div class="prawy">
-    </div>
-</div>
-
 
 </body>
 </html>
