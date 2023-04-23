@@ -51,7 +51,7 @@
 						} 
                         else {
                             echo '<li class="navbar-text">Witaj, '.$_SESSION["login"].'</li>';
-							echo '<li class="nav-item"><a class="nav-link" href="profil.php">Profil</a></li>';
+							echo '<li class="nav-item"><a class="nav-link" href="profile.php">Profil</a></li>';
                             echo '<li class="nav-item"><a class="nav-link" href="logout.php">Wyloguj się</a></li>';
 						      }
 					?>
