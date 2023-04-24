@@ -168,7 +168,7 @@ $connection->close();
 
         </div>
     </div>
-    </div
+	</div>
 
 
 
