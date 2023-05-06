@@ -25,6 +25,7 @@
   bottom: 0px;
 }
 </style>
+
   </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -45,17 +46,19 @@
       <ul class="navbar-nav ms-auto">
 					<?php
 						if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-                            echo '<li class="navbar-text">Witaj, niezalogowany</li>';
+              echo '<li class="navbar-text">Witaj, niezalogowany</li>';
 							echo '<li class="nav-item"><a class="nav-link" href="login.php">Logowanie</a></li>';
 							echo '<li class="nav-item"><a class="nav-link" href="register.php">Rejestracja</a></li>';
 						} 
-                        else {
-                            echo '<li class="navbar-text">Witaj, '.$_SESSION["login"].'</li>';
+            else {
+              echo '<li class="navbar-text">Witaj, '.$_SESSION["login"].'</li>';
 							echo '<li class="nav-item"><a class="nav-link" href="profile.php">Profil</a></li>';
-                            echo '<li class="nav-item"><a class="nav-link" href="logout.php">Wyloguj się</a></li>';
-						      }
+              echo '<li class="nav-item"><a class="nav-link" href="logout.php">Wyloguj się</a></li>';
+						
+						}
 					?>
 				</ul>
+
     </div>
   </div>
 </nav>
@@ -80,8 +83,7 @@
   <img src="https://placehold.jp/216x320.png" alt="movie">
   <button id="p3" style="display:;"> > </button>
         </div>
-
-<script> // skrypt w js do przyciskow
+        <script> // skrypt w js do przyciskow
  var a = 0;
   var p1 = document.getElementById("p1");
   var p2 = document.getElementById("p2");
@@ -116,5 +118,8 @@ p4.addEventListener("click", function() {
     
   
 </div>
+
+
+
 </body>
 </html>
