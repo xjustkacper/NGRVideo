@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Apr 23, 2023 at 02:39 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Host: 127.0.0.1
+-- Czas generowania: 20 Maj 2023, 16:28
+-- Wersja serwera: 10.4.20-MariaDB
+-- Wersja PHP: 8.0.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,16 +18,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ngrvideo`
+-- Baza danych: `ngrvideo`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Filmy`
+-- Struktura tabeli dla tabeli `filmy`
 --
 
-CREATE TABLE `Filmy` (
+CREATE TABLE `filmy` (
   `idFilmy` int(100) NOT NULL,
   `idLinki` int(100) NOT NULL,
   `Tytul` varchar(30) NOT NULL,
@@ -36,77 +36,100 @@ CREATE TABLE `Filmy` (
   `rokprodukcji` int(4) NOT NULL,
   `czastrwania` int(4) NOT NULL,
   `idKategoria` int(20) NOT NULL,
-  `Jezyk` int(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `Jezyk` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `filmy`
+--
+
+INSERT INTO `filmy` (`idFilmy`, `idLinki`, `Tytul`, `opis`, `rezyser`, `rokprodukcji`, `czastrwania`, `idKategoria`, `Jezyk`) VALUES
+(1, 1, 'Test1', 'Test1', 'test1', 1990, 111, 1, 'Rosja'),
+(2, 1, 'test2', 'XD', 'XD', 992, 22, 2, 'Polska');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Kategorie`
+-- Struktura tabeli dla tabeli `kategorie`
 --
 
-CREATE TABLE `Kategorie` (
+CREATE TABLE `kategorie` (
   `idKategorie` int(20) NOT NULL,
   `Nazwa` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `kategorie`
+--
+
+INSERT INTO `kategorie` (`idKategorie`, `Nazwa`) VALUES
+(1, 'Akcja'),
+(2, 'Dramat');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Komentarze`
+-- Struktura tabeli dla tabeli `komentarze`
 --
 
-CREATE TABLE `Komentarze` (
+CREATE TABLE `komentarze` (
   `idKomentarze` int(11) NOT NULL,
   `idProfilUzytkownika` int(11) NOT NULL,
   `idFilmy` int(11) NOT NULL,
   `komentarz` varchar(2000) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Linki`
+-- Struktura tabeli dla tabeli `linki`
 --
 
-CREATE TABLE `Linki` (
+CREATE TABLE `linki` (
   `idLinki` int(100) NOT NULL,
   `url` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `linki`
+--
+
+INSERT INTO `linki` (`idLinki`, `url`) VALUES
+(1, 'http://XD.XD');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Oceny`
+-- Struktura tabeli dla tabeli `oceny`
 --
 
-CREATE TABLE `Oceny` (
+CREATE TABLE `oceny` (
   `idOceny` int(100) NOT NULL,
   `idFilmy` int(100) NOT NULL,
   `idProfilUzytkownika` int(100) NOT NULL,
   `LiczbaGwiazdek` int(5) NOT NULL,
   `SredniaOcen` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ProfilUzytkownika`
+-- Struktura tabeli dla tabeli `profiluzytkownika`
 --
 
-CREATE TABLE `ProfilUzytkownika` (
+CREATE TABLE `profiluzytkownika` (
   `idProfilUzytkownika` int(100) NOT NULL,
   `idUzytkownik` int(100) NOT NULL,
   `DataRejestracji` date NOT NULL,
   `url_profilowe` varchar(50) NOT NULL,
   `opis` varchar(150) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `ProfilUzytkownika`
+-- Zrzut danych tabeli `profiluzytkownika`
 --
 
-INSERT INTO `ProfilUzytkownika` (`idProfilUzytkownika`, `idUzytkownik`, `DataRejestracji`, `url_profilowe`, `opis`) VALUES
+INSERT INTO `profiluzytkownika` (`idProfilUzytkownika`, `idUzytkownik`, `DataRejestracji`, `url_profilowe`, `opis`) VALUES
 (3, 4, '2023-04-23', '', ''),
 (4, 5, '2023-04-23', '', ''),
 (5, 6, '2023-04-23', '', ''),
@@ -117,34 +140,34 @@ INSERT INTO `ProfilUzytkownika` (`idProfilUzytkownika`, `idUzytkownik`, `DataRej
 -- --------------------------------------------------------
 
 --
--- Table structure for table `UlubioneFilmy`
+-- Struktura tabeli dla tabeli `ulubionefilmy`
 --
 
-CREATE TABLE `UlubioneFilmy` (
+CREATE TABLE `ulubionefilmy` (
   `idUlubioneFilmy` int(50) NOT NULL,
   `idFilmy` int(50) NOT NULL,
   `idProfilUzytkownika` int(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Uzytkownicy`
+-- Struktura tabeli dla tabeli `uzytkownicy`
 --
 
-CREATE TABLE `Uzytkownicy` (
+CREATE TABLE `uzytkownicy` (
   `idUzytkownicy` int(100) NOT NULL,
   `login` varchar(15) NOT NULL,
   `haslo` varchar(15) NOT NULL,
   `PytaniePomocnicze` varchar(30) NOT NULL,
   `OdpowiedzPomocnicza` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `Uzytkownicy`
+-- Zrzut danych tabeli `uzytkownicy`
 --
 
-INSERT INTO `Uzytkownicy` (`idUzytkownicy`, `login`, `haslo`, `PytaniePomocnicze`, `OdpowiedzPomocnicza`) VALUES
+INSERT INTO `uzytkownicy` (`idUzytkownicy`, `login`, `haslo`, `PytaniePomocnicze`, `OdpowiedzPomocnicza`) VALUES
 (4, 'test', 'test', 'adfsdf', 'dfasdf'),
 (5, '856', '756', '57', '75'),
 (6, 'test2', 'test2', '', ''),
@@ -153,10 +176,10 @@ INSERT INTO `Uzytkownicy` (`idUzytkownicy`, `login`, `haslo`, `PytaniePomocnicze
 (9, '445', '454', '', '');
 
 --
--- Triggers `Uzytkownicy`
+-- Wyzwalacze `uzytkownicy`
 --
 DELIMITER $$
-CREATE TRIGGER `UsrTrigger` AFTER INSERT ON `Uzytkownicy` FOR EACH ROW BEGIN
+CREATE TRIGGER `UsrTrigger` AFTER INSERT ON `uzytkownicy` FOR EACH ROW BEGIN
   INSERT INTO `ProfilUzytkownika` (`idUzytkownik`, `DataRejestracji`, `url_profilowe`, `opis`) 
   VALUES (NEW.`idUzytkownicy`, NOW(), '', '');
 END
@@ -164,153 +187,153 @@ $$
 DELIMITER ;
 
 --
--- Indexes for dumped tables
+-- Indeksy dla zrzutów tabel
 --
 
 --
--- Indexes for table `Filmy`
+-- Indeksy dla tabeli `filmy`
 --
-ALTER TABLE `Filmy`
+ALTER TABLE `filmy`
   ADD PRIMARY KEY (`idFilmy`),
   ADD KEY `idLinki` (`idLinki`),
   ADD KEY `idKategoria` (`idKategoria`);
 
 --
--- Indexes for table `Kategorie`
+-- Indeksy dla tabeli `kategorie`
 --
-ALTER TABLE `Kategorie`
+ALTER TABLE `kategorie`
   ADD PRIMARY KEY (`idKategorie`);
 
 --
--- Indexes for table `Komentarze`
+-- Indeksy dla tabeli `komentarze`
 --
-ALTER TABLE `Komentarze`
+ALTER TABLE `komentarze`
   ADD PRIMARY KEY (`idKomentarze`),
   ADD KEY `idFilmy` (`idFilmy`),
   ADD KEY `idProfilUzytkownika` (`idProfilUzytkownika`);
 
 --
--- Indexes for table `Linki`
+-- Indeksy dla tabeli `linki`
 --
-ALTER TABLE `Linki`
+ALTER TABLE `linki`
   ADD PRIMARY KEY (`idLinki`);
 
 --
--- Indexes for table `Oceny`
+-- Indeksy dla tabeli `oceny`
 --
-ALTER TABLE `Oceny`
+ALTER TABLE `oceny`
   ADD PRIMARY KEY (`idOceny`),
   ADD KEY `idFilmy` (`idFilmy`),
   ADD KEY `idProfilUzytkownika` (`idProfilUzytkownika`);
 
 --
--- Indexes for table `ProfilUzytkownika`
+-- Indeksy dla tabeli `profiluzytkownika`
 --
-ALTER TABLE `ProfilUzytkownika`
+ALTER TABLE `profiluzytkownika`
   ADD PRIMARY KEY (`idProfilUzytkownika`),
   ADD KEY `idUzytkownik` (`idUzytkownik`);
 
 --
--- Indexes for table `UlubioneFilmy`
+-- Indeksy dla tabeli `ulubionefilmy`
 --
-ALTER TABLE `UlubioneFilmy`
+ALTER TABLE `ulubionefilmy`
   ADD PRIMARY KEY (`idUlubioneFilmy`),
   ADD KEY `idFilmy` (`idFilmy`);
 
 --
--- Indexes for table `Uzytkownicy`
+-- Indeksy dla tabeli `uzytkownicy`
 --
-ALTER TABLE `Uzytkownicy`
+ALTER TABLE `uzytkownicy`
   ADD PRIMARY KEY (`idUzytkownicy`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT dla zrzuconych tabel
 --
 
 --
--- AUTO_INCREMENT for table `Filmy`
+-- AUTO_INCREMENT dla tabeli `filmy`
 --
-ALTER TABLE `Filmy`
-  MODIFY `idFilmy` int(100) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `filmy`
+  MODIFY `idFilmy` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `Kategorie`
+-- AUTO_INCREMENT dla tabeli `kategorie`
 --
-ALTER TABLE `Kategorie`
-  MODIFY `idKategorie` int(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `kategorie`
+  MODIFY `idKategorie` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `Komentarze`
+-- AUTO_INCREMENT dla tabeli `komentarze`
 --
-ALTER TABLE `Komentarze`
+ALTER TABLE `komentarze`
   MODIFY `idKomentarze` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `Linki`
+-- AUTO_INCREMENT dla tabeli `linki`
 --
-ALTER TABLE `Linki`
-  MODIFY `idLinki` int(100) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `linki`
+  MODIFY `idLinki` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `Oceny`
+-- AUTO_INCREMENT dla tabeli `oceny`
 --
-ALTER TABLE `Oceny`
+ALTER TABLE `oceny`
   MODIFY `idOceny` int(100) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `ProfilUzytkownika`
+-- AUTO_INCREMENT dla tabeli `profiluzytkownika`
 --
-ALTER TABLE `ProfilUzytkownika`
+ALTER TABLE `profiluzytkownika`
   MODIFY `idProfilUzytkownika` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `UlubioneFilmy`
+-- AUTO_INCREMENT dla tabeli `ulubionefilmy`
 --
-ALTER TABLE `UlubioneFilmy`
+ALTER TABLE `ulubionefilmy`
   MODIFY `idUlubioneFilmy` int(50) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `Uzytkownicy`
+-- AUTO_INCREMENT dla tabeli `uzytkownicy`
 --
-ALTER TABLE `Uzytkownicy`
+ALTER TABLE `uzytkownicy`
   MODIFY `idUzytkownicy` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- Constraints for dumped tables
+-- Ograniczenia dla zrzutów tabel
 --
 
 --
--- Constraints for table `Filmy`
+-- Ograniczenia dla tabeli `filmy`
 --
-ALTER TABLE `Filmy`
-  ADD CONSTRAINT `Filmy_ibfk_1` FOREIGN KEY (`idLinki`) REFERENCES `Linki` (`idLinki`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `Filmy_ibfk_2` FOREIGN KEY (`idKategoria`) REFERENCES `Kategorie` (`idKategorie`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `filmy`
+  ADD CONSTRAINT `Filmy_ibfk_1` FOREIGN KEY (`idLinki`) REFERENCES `linki` (`idLinki`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Filmy_ibfk_2` FOREIGN KEY (`idKategoria`) REFERENCES `kategorie` (`idKategorie`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `Komentarze`
+-- Ograniczenia dla tabeli `komentarze`
 --
-ALTER TABLE `Komentarze`
-  ADD CONSTRAINT `Komentarze_ibfk_1` FOREIGN KEY (`idFilmy`) REFERENCES `Filmy` (`idFilmy`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `Komentarze_ibfk_2` FOREIGN KEY (`idProfilUzytkownika`) REFERENCES `ProfilUzytkownika` (`idProfilUzytkownika`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `komentarze`
+  ADD CONSTRAINT `Komentarze_ibfk_1` FOREIGN KEY (`idFilmy`) REFERENCES `filmy` (`idFilmy`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Komentarze_ibfk_2` FOREIGN KEY (`idProfilUzytkownika`) REFERENCES `profiluzytkownika` (`idProfilUzytkownika`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `Oceny`
+-- Ograniczenia dla tabeli `oceny`
 --
-ALTER TABLE `Oceny`
-  ADD CONSTRAINT `Oceny_ibfk_1` FOREIGN KEY (`idFilmy`) REFERENCES `Filmy` (`idFilmy`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `Oceny_ibfk_2` FOREIGN KEY (`idProfilUzytkownika`) REFERENCES `ProfilUzytkownika` (`idProfilUzytkownika`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `oceny`
+  ADD CONSTRAINT `Oceny_ibfk_1` FOREIGN KEY (`idFilmy`) REFERENCES `filmy` (`idFilmy`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `Oceny_ibfk_2` FOREIGN KEY (`idProfilUzytkownika`) REFERENCES `profiluzytkownika` (`idProfilUzytkownika`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `ProfilUzytkownika`
+-- Ograniczenia dla tabeli `profiluzytkownika`
 --
-ALTER TABLE `ProfilUzytkownika`
-  ADD CONSTRAINT `ProfilUzytkownika_ibfk_1` FOREIGN KEY (`idUzytkownik`) REFERENCES `Uzytkownicy` (`idUzytkownicy`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `profiluzytkownika`
+  ADD CONSTRAINT `ProfilUzytkownika_ibfk_1` FOREIGN KEY (`idUzytkownik`) REFERENCES `uzytkownicy` (`idUzytkownicy`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `UlubioneFilmy`
+-- Ograniczenia dla tabeli `ulubionefilmy`
 --
-ALTER TABLE `UlubioneFilmy`
-  ADD CONSTRAINT `UlubioneFilmy_ibfk_1` FOREIGN KEY (`idFilmy`) REFERENCES `Filmy` (`idFilmy`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ulubionefilmy`
+  ADD CONSTRAINT `UlubioneFilmy_ibfk_1` FOREIGN KEY (`idFilmy`) REFERENCES `filmy` (`idFilmy`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
