@@ -42,6 +42,7 @@ if (isset($_SESSION["error"]) && $_SESSION["error"] === true) {
     <?php
      echo $error;
       ?>
+      <a href="recover.php">Zapomniałem hasła</a>
     <button class="w-100 btn btn-lg btn-primary" type="submit">Zaloguj się</button>
     
     <p class="mt-5 mb-3 text-muted"> Made in 2023</p>

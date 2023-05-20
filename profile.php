@@ -51,11 +51,11 @@ $connection->close();
       <a class="navbar-brand" href="index.php">NGRVideo</a>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="#">Baza filmów</a>
+          <a class="nav-link" href="datamovies.php">Baza filmów</a>
         </li>
       </ul>
-      <form class="d-flex mx-3" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <form class="d-flex mx-3" action="search.php" method="POST" role="search">
+        <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
     </div>
@@ -69,7 +69,7 @@ $connection->close();
 						} 
             else {
               echo '<li class="navbar-text">Witaj, '.$_SESSION["login"].'</li>';
-							echo '<li class="nav-item"><a class="nav-link" href="profile.php">Profil</a></li>';
+							echo '<li class="nav-item"><a class="nav-link" href="profil.php">Profil</a></li>';
               echo '<li class="nav-item"><a class="nav-link" href="logout.php">Wyloguj się</a></li>';
 						
 						}
@@ -168,7 +168,7 @@ $connection->close();
 
         </div>
     </div>
-	</div>
+    </div>
 
 
 
