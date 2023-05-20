@@ -129,10 +129,16 @@ $connection->close();
                     <div class="col-sm-3">
                       <h6 class="mb-0">Data dołączenia</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-sm-9 text-secondary pb-4">
                  <?php 
                  echo $data["data_rejestracji"]; 
                  ?>
+                    </div>
+                    <hr>
+                <div class="row">
+                    <div class="col-sm-12">
+                      <a class="btn btn-info" target="__blank" href="update.php">Edytuj</a>
+                    </div>
                 </div>
                   </div>
                   </div>
@@ -168,7 +174,7 @@ $connection->close();
 
         </div>
     </div>
-    </div>
+	</div>
 
 
 
