@@ -90,7 +90,7 @@ $connection->close();
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex flex-column align-items-center text-center">
-                    <img src="https://placehold.jp/50x50.png" alt="Admin" class="rounded-circle" width="150">
+                    <img src="https://placehold.jp/50x50.png" alt="Admin" class="rounded-circle shadow-4" width="150">
                     <h4>
                       <?php
                       echo $_SESSION["login"];
@@ -137,7 +137,7 @@ $connection->close();
                     <hr>
                 <div class="row">
                     <div class="col-sm-12">
-                      <a class="btn btn-info" target="__blank" href="update.php">Edytuj</a>
+                      <a class="btn btn-primary" target="__blank" href="update.php">Edytuj</a>
                     </div>
                 </div>
                   </div>
