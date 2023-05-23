@@ -52,20 +52,21 @@
     
         <div class="container">
             <div class="main-body">
-                <div class="row">
+                <div class="row mt-5">
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex flex-column align-items-center text-center">
-                                    <img src="https://assets.puzzlefactory.pl/puzzle/293/329/original.webp" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                                    <img  id="pfpic" src="https://placehold.jp/50x50.png" alt="Błędny URL" class="rounded-circle shadow-4" width="150">
                                     <div class="mt-3">
                                         <h4>Nickname</h4>
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <input class="form-control form-control-sm" id="formFileSm" type="file">
+                                <div class="input-group flex-nowrap">
+                                    <span class="input-group-text" id="addon-wrapping">URL</span>
+                                    <input id="input"  type="text" class="form-control" autocomplete="off">
+                                    <button id="buttonchange" type="submit" class="btn btn-primary">Zmień</button>
                                   </div>
-                
                             </div>
                         </div>
                     </div>
@@ -88,16 +89,7 @@
                                         <input type="text" class="form-control" value="Lorem ipsum UZ dziekan dziekan">
                                     </div>
                                 </div>
-                                <div class="row mb-3">
-                                    <div class="col-sm-3">
-                                      <h6 class="mb-0">Data dołączenia</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary pb-4">
-                                 <?php 
-                                 echo $data["data_rejestracji"]; 
-                                 ?>
-                                    </div>
-                                </div>
+
                                 <div class="row">
                                     <div class="col-sm-3"></div>
                                     <div class="col-sm-9 text-secondary">
@@ -113,6 +105,6 @@
 
 
 
-
+<script src="picChanger.js"></script>
 </body>
 </html>
