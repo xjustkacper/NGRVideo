@@ -145,6 +145,8 @@
                               </div>
                            </div>
                         </div>
+                        <button type="button" class="btn btn-warning">
+                           Ulubione
                      </div>
                      <div class="row justify-content-center mt-5">
                         <div class="col-md-auto">
