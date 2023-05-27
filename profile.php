@@ -22,6 +22,10 @@ if($result = @$connection->query($sql)) {
 
     $data["data_rejestracji"] = $data_rejestracji; 
 
+    // dodaj URL obrazu profilowego i opis do tablicy danych
+    $data["url_profilowe"] = $row["url_profilowe"];
+    $data["opis"] = $row["opis"];
+
     $result->close();
   }
   else {
@@ -31,7 +35,6 @@ if($result = @$connection->query($sql)) {
 
 $connection->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pl">
@@ -69,7 +72,7 @@ $connection->close();
 						} 
             else {
               echo '<li class="navbar-text">Witaj, '.$_SESSION["login"].'</li>';
-							echo '<li class="nav-item"><a class="nav-link" href="profil.php">Profil</a></li>';
+							echo '<li class="nav-item"><a class="nav-link" href="profile.php">Profil</a></li>';
               echo '<li class="nav-item"><a class="nav-link" href="logout.php">Wyloguj się</a></li>';
 						
 						}
@@ -81,16 +84,12 @@ $connection->close();
 </nav>
 <div class="container">
     <div class="main-body">
-    
-       
-         
-    
           <div class="row gutters-sm mt-5">
             <div class="col-md-4 mb-3">
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex flex-column align-items-center text-center">
-                    <img src="https://placehold.jp/50x50.png" alt="Admin" class="rounded-circle shadow-4" width="150">
+                    <img src="<?php echo $data["url_profilowe"]; ?>" alt="Admin" class="rounded-circle shadow-4" width="150">
                     <h4>
                       <?php
                       echo $_SESSION["login"];
@@ -121,10 +120,10 @@ $connection->close();
                       <h6 class="mb-0">Opis</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                    <?php echo $data["opis"]; ?>
                     </div>
-                    <hr>
                   </div>
+                  <hr>
                   <div class="row">
                     <div class="col-sm-3">
                       <h6 class="mb-0">Data dołączenia</h6>
@@ -148,36 +147,14 @@ $connection->close();
               <div id="carouselExample" class="carousel slide">
                 <div class="carousel-inner">
                   <div class="carousel-item active">
-                    <img src="https://placehold.jp/500x500.png" class="d-block w-100" alt="...">
-                  </div>
-                  <div class="carousel-item">
-                    <img src="https://placehold.jp/500x500.png" class="d-block w-100" alt="...">
-                  </div>
-                  <div class="carousel-item">
-                    <img src="https://placehold.jp/500x500.png" class="d-block w-100" alt="...">
+                  <!-- Here will be favourite movies -->
                   </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Next</span>
-                </button>
               </div>
-
-
-
             </div>
           </div>
-
         </div>
     </div>
-	</div>
-
-
-
 
 </body>
 </html>
