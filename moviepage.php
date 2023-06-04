@@ -116,6 +116,25 @@ $stmt->close();
   echo $numberofstars;
   exit();
 }
+if(isset($_POST['toggle-favorite'])) {
+  $check = $conn->prepare("SELECT * FROM ulubioneFilmy WHERE idFilmy=? AND idProfilUzytkownika=?");
+  $check->bind_param('ii', $idFilmy, $userId);
+  $check->execute();
+  $result = $check->get_result();
+  if($result->num_rows === 0) {
+      $stmt = $conn->prepare("INSERT INTO ulubioneFilmy (idFilmy, idProfilUzytkownika) VALUES (?, ?)");
+      $stmt->bind_param('ii', $idFilmy, $userId);
+  } else {
+      $stmt = $conn->prepare("DELETE FROM ulubioneFilmy WHERE idFilmy=? AND idProfilUzytkownika=?");
+      $stmt->bind_param('ii', $idFilmy, $userId);
+  }
+  $stmt->execute();
+}
+$check = $conn->prepare("SELECT * FROM ulubioneFilmy WHERE idFilmy=? AND idProfilUzytkownika=?");
+$check->bind_param('ii', $idFilmy, $userId);
+$check->execute();
+$result = $check->get_result();
+$favorite = $result->num_rows !== 0;
 
 
 
@@ -232,8 +251,11 @@ $conn->close();
 </div>
                            </div>
                         </div>
-                        <button type="button" class="btn btn-warning">
-                           Dodaj do ulubionych
+                        <form method="post">
+<button type="submit" class="btn btn-warning" name="toggle-favorite">
+    <?php echo $favorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'; ?>
+</button>
+</form>
                      </div>
                      <div class="row justify-content-center mt-5">
                         <div class="col-md-auto">
