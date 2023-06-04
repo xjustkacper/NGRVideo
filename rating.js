@@ -1,39 +1,46 @@
-const ratingStars = [...document.getElementsByClassName("rating__star")];
+window.addEventListener('DOMContentLoaded', (event) => {
+    let ratingStars = Array.from(document.getElementsByClassName("rating__star"));
+    let ratingInput = document.getElementById("rating-input");
+    let starCount = document.getElementById("star-count");
 
-function executeRating(stars) {
-  const starClassActive = "rating__star fas fa-star";
-  const starClassInactive = "rating__star far fa-star";
-  const starsLength = stars.length;
-  const noRating = document.getElementsByClassName("fa-circle-xmark");
+    // Sprawdzanie, czy ratingStars, ratingInput i starCount nie są undefined lub null
+    if (ratingStars && ratingInput && starCount) {
+        let currentRating = ratingInput.value;
+        updateStars(ratingStars, currentRating);
+        starCount.textContent = currentRating;
 
+        ratingStars.forEach((star) => {
+            star.addEventListener("click", function () {
+                let value = this.getAttribute("data-value");
+                ratingInput.value = value;
+                updateStars(ratingStars, value);
+                starCount.textContent = value;
 
-  noRating[0].onclick = function() {
-    noRating[0].className = "fa-solid fa-circle-xmark";
-    document.querySelector("#ocena").innerHTML = 'Brak'; 
-      for(let j = 0; j < starsLength; ++j){
-        stars[j].className = starClassInactive;
-      }
-    };
+                let form = document.getElementById('rating-form');
+                // Sprawdzanie, czy form nie jest undefined lub null
+                if (form) {
+                    let formData = new FormData(form);
 
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.text())
+                        .then(data => {
+                            console.log("Response from server:", data);
+                            console.log("Type of data:", typeof data);
+                            starCount.textContent = data;
+                            updateStars(ratingStars, data);
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            });
+        });
 
-  let i;
-  stars.map((star) => {
-    star.onclick = () => {
-      i = stars.indexOf(star);
-      if (star.className===starClassInactive) {
-        for (i; i >= 0; --i){
-         noRating[0].className = "fa-regular fa-circle-xmark";
-         stars[i].className = starClassActive;
-         document.querySelector("#ocena").innerHTML = stars.indexOf(star) + 1;
+        function updateStars(stars, value) {
+            stars.forEach((star) => {
+                star.textContent = parseInt(star.getAttribute("data-value")) <= value ? "★" : "☆";
+            });
         }
-      } else {
-        for (i; i < starsLength; ++i) {
-        noRating[0].className = "fa-regular fa-circle-xmark";
-        stars[i+1].className = starClassInactive;
-        document.querySelector("#ocena").innerHTML = stars.indexOf(star) + 1;
-        }
-      }
-    };
-  });
-}
-executeRating(ratingStars);
+    }
+});
