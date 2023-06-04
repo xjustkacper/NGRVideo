@@ -104,10 +104,12 @@ $conn->close();
           <?php foreach ($filmy as $film): ?>
           <div class="col-md-4">
           <div class="card mb-4">
-          <img src="https://via.placeholder.com/200x300" class="card-img-top" alt="...">
+            <a href="moviepage.php?id=<?php echo $film['idFilmy']; ?>">
+              <img  src="https://via.placeholder.com/200x300" class="card-img-top" alt="...">
+            </a>
           <div class="card-body">
           <h5 class="card-title"><?php echo $film['Tytul']; ?></h5>
-          <p class="card-text"><?php echo $film['Jezyk']; ?>, <?php echo $film['rokprodukcji']; ?></p>
+          <p class="card-text"><?php echo $film['Jezyk']; ?>, <?php echo $film['idFilmy']; ?></p>
           </div>
           </div>
           </div>
@@ -119,3 +121,4 @@ $conn->close();
           </body>
           </html>
           
+  
