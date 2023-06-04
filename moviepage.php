@@ -194,7 +194,7 @@ $conn->close();
     <div class="main-body pt-5">  
       <div class="card">
         <div class="card-body">
-          <div class="row gutters-sm mt-5">
+          <div class="row gutters-sm mt-5 justify-content-center">
             <div class="col-md-8">
               <div class="card mb-3">
                 <div class="card-body">
