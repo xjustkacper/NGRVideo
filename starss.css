@@ -1,0 +1,9 @@
+.rating__star {
+    color: rgb(204, 153, 0); /* dark yellow */
+    cursor: pointer;
+    font-size: 23px;
+}
+
+.rating__star:hover {
+    color: gold;
+}
