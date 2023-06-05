@@ -19,10 +19,14 @@ if (isset($_GET['id'])) {
 
 // Pobierz szczegółowe informacje o filmie z bazy danych
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
-$sql = "SELECT Filmy.*, Kategorie.Nazwa AS kategoria 
-      FROM Filmy
-      JOIN Kategorie ON Filmy.idKategoria = Kategorie.idKategorie
-      WHERE Filmy.idFilmy = ?"; 
+$sql = "SELECT f.idFilmy, l.url AS 'Link', f.Tytul, f.opis, f.rezyser, f.rokprodukcji, f.czastrwania, k.Nazwa AS 'kategoria', f.Jezyk, f.url_baner 
+FROM filmy f 
+INNER JOIN linki l ON f.idLinki = l.idLinki 
+INNER JOIN kategorie k ON f.idKategoria = k.idKategorie 
+WHERE f.idFilmy = ?";
+
+
+; 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $idFilmy);
 $stmt->execute();
@@ -194,7 +198,7 @@ $conn->close();
     <div class="main-body pt-5">  
       <div class="card">
         <div class="card-body">
-          <div class="row gutters-sm mt-5 justify-content-center">
+        <div class="row gutters-sm mt-5 justify-content-center">
             <div class="col-md-8">
               <div class="card mb-3">
                 <div class="card-body">
@@ -259,7 +263,7 @@ $conn->close();
                      </div>
                      <div class="row justify-content-center mt-5">
                         <div class="col-md-auto">
-                           <iframe width="854" height="480" src="https://www.youtube.com/embed/zokvi67Yko0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                           <iframe width="854" height="480" src="<?php echo $film['Link']?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                         </div>
                      </div>
                   </div>
