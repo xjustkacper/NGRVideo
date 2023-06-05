@@ -80,7 +80,7 @@ $conn->close();
             <div class="col-md-3">
     <div class="card mb-3">
         <a href="moviepage.php?id=<?php echo $film['idFilmy']; ?>">
-            <img src="https://via.placeholder.com/200x300" class="card-img-top" alt="...">
+            <img src="<?php echo $film['url_baner']; ?>" class="card-img-top" alt="...">
         </a>
         <div class="card-body">
             <h5 class="card-title"><?php echo $film['Tytul']; ?></h5>
