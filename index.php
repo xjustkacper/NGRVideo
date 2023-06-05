@@ -4,10 +4,10 @@ require_once "connect.php";
 
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
 
-$sql1 = "SELECT tytul FROM filmy";
-$sql2 = "SELECT tytul FROM filmy";
+$sqltop10 = "SELECT f.Tytul, AVG(o.LiczbaGwiazdek) AS SredniaOcena FROM filmy f JOIN oceny o ON f.idFilmy = o.idFilmy GROUP BY f.idFilmy, f.Tytul ORDER BY SredniaOcena DESC LIMIT 10;"; 
+$sql2 = "SELECT * FROM `filmy` ORDER BY idFilmy DESC LIMIT 10;";
 
-$stmt = $conn->prepare($sql1);
+$stmt = $conn->prepare($sqltop10);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -16,9 +16,20 @@ while ($row = $result->fetch_assoc()) {
     $tytul[] = $row;
 }
 
+$stmt2 = $conn->prepare($sql2);
+$stmt2->execute();
+$result2 = $stmt2->get_result();
+
+$najnowsze = [];
+while ($row = $result2->fetch_assoc()) {
+    $najnowsze[] = $row;
+}
+
 $stmt->close();
+$stmt2->close();
 $conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -74,7 +85,6 @@ $conn->close();
   </div>
 </nav>
 
-  <!-- <img src="https://placehold.jp/216x320.png" alt="movie"> -->
 
 
 
@@ -90,7 +100,7 @@ $conn->close();
                   <div class="card">
                     <img src="https://placehold.jp/216x320.png" alt="image" class="card-img-top">
                     <div class="card-body">
-                      <h4><?php echo $tytuly["tytul"]?></h4>
+                      <h4><?php echo $tytuly["Tytul"]?></h4>
                     </div>
                   </div>
                 </div>
@@ -108,13 +118,13 @@ $conn->close();
     <div class="row">
       <div class="owl-carousel owl-theme">
         <?php 
-        if (count($tytul) > 0) {
-            foreach ($tytul as $tytuly): ?>
+        if (count($najnowsze) > 0) {
+            foreach ($najnowsze as $film): ?>
                 <div class="item">
                   <div class="card">
                     <img src="https://placehold.jp/216x320.png" alt="image" class="card-img-top">
                     <div class="card-body">
-                      <h4><?php echo $tytuly["tytul"]?></h4>
+                      <h4><?php echo $film["Tytul"]?></h4>
                     </div>
                   </div>
                 </div>
@@ -125,6 +135,7 @@ $conn->close();
     </div>
   </div>
 </section>
+
 <div>
   <br />
     <img src="https://placehold.jp/800x180.png" alt="Reklama"> 
