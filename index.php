@@ -4,7 +4,7 @@ require_once "connect.php";
 
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
 
-$sqltop10 = "SELECT f.Tytul, AVG(o.LiczbaGwiazdek) AS SredniaOcena,f.idFilmy FROM filmy f JOIN oceny o ON f.idFilmy = o.idFilmy GROUP BY f.idFilmy, f.Tytul ORDER BY SredniaOcena DESC LIMIT 10;"; 
+$sqltop10 = "SELECT f.Tytul,f.url_baner, AVG(o.LiczbaGwiazdek) AS SredniaOcena,f.idFilmy FROM filmy f JOIN oceny o ON f.idFilmy = o.idFilmy GROUP BY f.idFilmy, f.Tytul ORDER BY SredniaOcena DESC LIMIT 10;"; 
 $sql2 = "SELECT * FROM `filmy` ORDER BY idFilmy DESC LIMIT 10;";
 
 $stmt = $conn->prepare($sqltop10);
@@ -99,7 +99,7 @@ $conn->close();
             <div class="item">
               <div class="card">
                 <a href="moviepage.php?id=<?php echo $tytuly["idFilmy"] ?>">
-                  <img src="https://placehold.jp/216x320.png" alt="image" class="card-img-top">
+                  <img src="<?php echo $tytuly["url_baner"]?>" alt="image" class="card-img-top">
                 </a>
                 <div class="card-body">
                   <h4><?php echo $tytuly["Tytul"]?></h4>
@@ -125,7 +125,7 @@ $conn->close();
             <div class="item">
               <div class="card">
                 <a href="moviepage.php?id=<?php echo $film["idFilmy"] ?>">
-                  <img src="https://placehold.jp/216x320.png" alt="image" class="card-img-top">
+                  <img src="<?php echo $film["url_baner"]?>" alt="image" class="card-img-top" >
                 </a>
                 <div class="card-body">
                   <h4><?php echo $film["Tytul"]?></h4>
