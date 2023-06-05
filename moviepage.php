@@ -236,6 +236,39 @@ $conn->close();
                     </div>
                     <hr>
                     <div class="row">
+                      <div class="col-sm-3">
+                        <h6 class="mb-0">Reżyser:</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                      <?php
+                        echo $film['rezyser']
+                        ?>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <h6 class="mb-0">Czas trwania:</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                      <?php
+                        echo $film['czastrwania']
+                        ?> minut
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <h6 class="mb-0">Rok produkcji:</h6>
+                      </div>
+                      <div class="col-sm-9 text-secondary">
+                      <?php
+                        echo $film['rokprodukcji']
+                        ?>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
     <div class="col-sm-3">
         <h6 class="mb-0">Ocena:</h6>
     </div>
@@ -330,3 +363,15 @@ $conn->close();
       <script src="rating.js"></script>
    </body>
 </html>
+
+<!-- Zmieniłem
+
+$sql = "SELECT Filmy.*, Kategorie.Nazwa AS kategoria 
+      FROM Filmy
+      JOIN Kategorie ON Filmy.idKategoria = Kategorie.idKategorie
+      WHERE Filmy.idFilmy = ?";
+na
+$sql = "SELECT f.idFilmy, l.url AS 'Link', f.Tytul, f.opis, f.rezyser, f.rokprodukcji, f.czastrwania, k.Nazwa AS 'Kategoria', f.Jezyk, f.url_baner FROM filmy f INNER JOIN linki l ON f.idLinki = l.idLinki INNER JOIN kategorie k ON f.idKategoria = k.idKategorie WHERE Filmy.idFilmy = ?"; 
+i już nie działa, pokazuję następujący błąd:
+
+Fatal error: Uncaught Error: Call to a member function bind_param() on bool in C:\xampp\htdocs\moviepage.php:26 Stack trace: #0 {main} thrown in C:\xampp\htdocs\moviepage.php on line 26 -->
