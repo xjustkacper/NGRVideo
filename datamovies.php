@@ -33,6 +33,18 @@ while ($row = $result->fetch_assoc()) {
 }
 
 $stmt->close();
+
+$sql = "SELECT DISTINCT Nazwa FROM Kategorie";
+$categories_stmt = $conn->prepare($sql);
+$categories_stmt->execute();
+$categories_result = $categories_stmt->get_result();
+
+$categories = [];
+while ($category = $categories_result->fetch_assoc()) {
+    $categories[] = $category;
+}
+
+$categories_stmt->close();
 $conn->close();
 ?>
 
@@ -89,14 +101,9 @@ $conn->close();
           <div class="list-group">
           <a class="list-group-item list-group-item-action active" aria-current="true">Kategorie filmów</a>
           <a href="?kategoria=all" class="list-group-item list-group-item-action">Wszystkie filmy</a>
-          <a href="?kategoria=Akcja" class="list-group-item list-group-item-action">Akcja</a>
-          <a href="?kategoria=Kryminał" class="list-group-item list-group-item-action">Kryminał</a>
-          <a href="?kategoria=Dramat" class="list-group-item list-group-item-action">Dramat</a>
-          <a href="?kategoria=Komedia" class="list-group-item list-group-item-action">Komedia</a>
-          <a href="?kategoria=Przygodowy" class="list-group-item list-group-item-action">Przygodowy</a>
-          <a href="?kategoria=Romans" class="list-group-item list-group-item-action">Romans</a>
-          <a href="?kategoria=Sci-Fi" class="list-group-item list-group-item-action">Sci-Fi</a>
-          <a href="?kategoria=Thriller" class="list-group-item list-group-item-action">Thriller</a>
+          <?php foreach ($categories as $category): ?>
+                    <a href="?kategoria=<?php echo $category['Nazwa']; ?>" class="list-group-item list-group-item-action"><?php echo $category['Nazwa']; ?></a>
+                <?php endforeach; ?>
           </div>
           </div>
           <div class="col-md-9">
@@ -105,11 +112,11 @@ $conn->close();
           <div class="col-md-4">
           <div class="card mb-4">
             <a href="moviepage.php?id=<?php echo $film['idFilmy']; ?>">
-              <img  src="https://via.placeholder.com/200x300" class="card-img-top" alt="...">
+              <img  src="<?php echo $film['url_baner']; ?>" class="card-img-top" alt="...">
             </a>
           <div class="card-body">
           <h5 class="card-title"><?php echo $film['Tytul']; ?></h5>
-          <p class="card-text"><?php echo $film['Jezyk']; ?>, <?php echo $film['idFilmy']; ?></p>
+          <p class="card-text"><?php echo $film['Jezyk']; ?>, <?php echo $film['rokprodukcji']; ?></p>
           </div>
           </div>
           </div>
