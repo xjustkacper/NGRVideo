@@ -5,7 +5,7 @@ require_once "connect.php";
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
 
 $search = strtolower(preg_replace('/\s+/', '', $conn->real_escape_string($_POST["search"])));
-$sql = "SELECT Filmy.*, Kategorie.Nazwa AS kategoria 
+$sql = "SELECT Filmy.*, Kategorie.Nazwa AS kategoria,Filmy.idFilmy 
         FROM Filmy
         JOIN Kategorie ON Filmy.idKategoria = Kategorie.idKategorie
         WHERE LOWER(REPLACE(Tytul, ' ', '')) LIKE '%$search%'";
@@ -78,14 +78,16 @@ $conn->close();
     if (count($filmy) > 0) {
         foreach ($filmy as $film): ?>
             <div class="col-md-3">
-                <div class="card mb-3">
-                    <img src="https://via.placeholder.com/200x300" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title"><?php echo $film['Tytul']; ?></h5>
-                        <p class="card-text"><?php echo $film['Jezyk']; ?>, <?php echo $film['rokprodukcji']; ?></p>
-                    </div>
-                </div>
-            </div>
+    <div class="card mb-3">
+        <a href="moviepage.php?id=<?php echo $film['idFilmy']; ?>">
+            <img src="https://via.placeholder.com/200x300" class="card-img-top" alt="...">
+        </a>
+        <div class="card-body">
+            <h5 class="card-title"><?php echo $film['Tytul']; ?></h5>
+            <p class="card-text"><?php echo $film['Jezyk']; ?>, <?php echo $film['rokprodukcji']; ?></p>
+        </div>
+    </div>
+</div>
         <?php endforeach;
     } else {
         echo '<p>Brak wyników dla "' . $_POST["search"] . '"</p>';
