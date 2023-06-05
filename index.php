@@ -4,7 +4,7 @@ require_once "connect.php";
 
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
 
-$sqltop10 = "SELECT f.Tytul, AVG(o.LiczbaGwiazdek) AS SredniaOcena FROM filmy f JOIN oceny o ON f.idFilmy = o.idFilmy GROUP BY f.idFilmy, f.Tytul ORDER BY SredniaOcena DESC LIMIT 10;"; 
+$sqltop10 = "SELECT f.Tytul, AVG(o.LiczbaGwiazdek) AS SredniaOcena,f.idFilmy FROM filmy f JOIN oceny o ON f.idFilmy = o.idFilmy GROUP BY f.idFilmy, f.Tytul ORDER BY SredniaOcena DESC LIMIT 10;"; 
 $sql2 = "SELECT * FROM `filmy` ORDER BY idFilmy DESC LIMIT 10;";
 
 $stmt = $conn->prepare($sqltop10);
@@ -94,19 +94,21 @@ $conn->close();
     <div class="row">
     <div class="owl-carousel owl-theme">
     <?php 
-        if (count($tytul) > 0) {
-            foreach ($tytul as $tytuly): ?>
-                <div class="item">
-                  <div class="card">
-                    <img src="https://placehold.jp/216x320.png" alt="image" class="card-img-top">
-                    <div class="card-body">
-                      <h4><?php echo $tytuly["Tytul"]?></h4>
-                    </div>
-                  </div>
+    if (count($tytul) > 0) {
+        foreach ($tytul as $tytuly): ?>
+            <div class="item">
+              <div class="card">
+                <a href="moviepage.php?id=<?php echo $tytuly["idFilmy"] ?>">
+                  <img src="https://placehold.jp/216x320.png" alt="image" class="card-img-top">
+                </a>
+                <div class="card-body">
+                  <h4><?php echo $tytuly["Tytul"]?></h4>
                 </div>
-            <?php endforeach;
-        } 
-        ?>
+              </div>
+            </div>
+        <?php endforeach;
+    } 
+    ?>
     </div>
     </div>
 </div>
@@ -117,20 +119,22 @@ $conn->close();
     <h1 class="text-center fw-bold ">Nowe</h1>
     <div class="row">
       <div class="owl-carousel owl-theme">
-        <?php 
-        if (count($najnowsze) > 0) {
-            foreach ($najnowsze as $film): ?>
-                <div class="item">
-                  <div class="card">
-                    <img src="https://placehold.jp/216x320.png" alt="image" class="card-img-top">
-                    <div class="card-body">
-                      <h4><?php echo $film["Tytul"]?></h4>
-                    </div>
-                  </div>
+      <?php 
+    if (count($najnowsze) > 0) {
+        foreach ($najnowsze as $film): ?>
+            <div class="item">
+              <div class="card">
+                <a href="moviepage.php?id=<?php echo $film["idFilmy"] ?>">
+                  <img src="https://placehold.jp/216x320.png" alt="image" class="card-img-top">
+                </a>
+                <div class="card-body">
+                  <h4><?php echo $film["Tytul"]?></h4>
                 </div>
-            <?php endforeach;
-        } 
-        ?>
+              </div>
+            </div>
+        <?php endforeach;
+    } 
+?>
       </div>
     </div>
   </div>
