@@ -2,6 +2,12 @@
 session_start();
 require_once "connect.php";
 
+
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+  header("Location: login.php");
+    exit;
+} 
+
 if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true){
   $userLogin = $_SESSION['login'];
 } else {
@@ -11,11 +17,6 @@ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true){
 if (isset($_GET['id'])) {
   $idFilmy = $_GET['id'];
 } 
-// else {
-//   // Jeśli identyfikator filmu nie jest ustawiony, przekieruj użytkownika z powrotem do datamovies.php
-//   header("Location: datamovies.php");
-//   exit;
-// }
 
 // Pobierz szczegółowe informacje o filmie z bazy danych
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
