@@ -33,5 +33,7 @@ Aby uruchomić naszą stronę trzeba:
 1. Uruchomić serwer MySQL.
 2. Uruchomić serwer HTTP (Apache w XAMPP)
 3. Przenieś wszystkie pliki znajdujące się w folderze do miejsca w którym serwer HTTP pobiera dane (w przypadku XAMPP „htdocs”)
-4. Uruchomić przeglądarką w karcie prywatnej.
+4. Uruchomić przeglądarką w karcie prywatnej
 5. Wpisanie w adresie przeglądarki adres serwera HTTP z ścieżką do pliku „index.php” (np. http://localhost/index.php)
+
+UWAGA! Podczas przeglądania strony zaleca się używania rozdzielczości panoramicznych ekranu tzw. 16:9, ponieważ nie wszystkie funkcję mogą wyświetlać się prawidłowo!
