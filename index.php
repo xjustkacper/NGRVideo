@@ -25,6 +25,22 @@ while ($row = $result2->fetch_assoc()) {
     $najnowsze[] = $row;
 }
 
+// Losowanie id reklamy
+$idReklama = rand(1, 2);  // Zakładam, że id reklam są od 1 do 2.
+
+// Zapytanie do pobrania reklamy
+$sqlReklama = "SELECT url_reklama FROM reklama WHERE idReklama = ?";
+$stmtReklama = $conn->prepare($sqlReklama);
+$stmtReklama->bind_param("i", $idReklama);
+$stmtReklama->execute();
+$resultReklama = $stmtReklama->get_result();
+
+$reklama = [];
+while ($row = $resultReklama->fetch_assoc()) {
+    $reklama[] = $row;
+}
+
+$stmtReklama->close();
 $stmt->close();
 $stmt2->close();
 $conn->close();
@@ -142,7 +158,16 @@ $conn->close();
 
 <div>
   <br />
-    <img src="https://placehold.jp/800x180.png" alt="Reklama"> 
+    
+  <div class="d-flex justify-content-center">
+    <!-- Wyświetlanie reklamy -->
+    <?php if (count($reklama) > 0) {
+        foreach ($reklama as $rek): ?>
+            <a href="register.php"><img src="<?php echo $rek["url_reklama"]?>" alt="Reklama"> </a>
+        <?php endforeach;
+    } ?>
+  </div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
