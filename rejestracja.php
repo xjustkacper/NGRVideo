@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+ini_set('display_errors', 'Off');
+
 session_start();
 
 
@@ -28,7 +31,7 @@ $connection = @new mysqli($host, $db_user, $db_pass, $db_name);
         // dodanie nowego użytkownika do bazy danych
         $sql_insert = "INSERT INTO Uzytkownicy (login, haslo, PytaniePomocnicze, OdpowiedzPomocnicza) VALUES ('$login', '$haslo', '$PytaniePomocnicze', '$OdpowiedzPomocnicza')";
         if ($connection->query($sql_insert) === TRUE) {
-            $success_msg = "Rejestracja przebiegła pomyślnie, możesz się teraz zalogować.";
+            $success_msg = "Rejestracja przebiegła pomyślnie, możesz się teraz zalogować.Zostaniesz przekierowany automatycznie!";
             echo $success_msg;
             header("refresh:5;url=login.php");
         } else {

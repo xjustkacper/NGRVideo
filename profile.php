@@ -6,6 +6,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
   exit;
 }
 $connection = @new mysqli($host, $db_user, $db_pass, $db_name);
+$userLogin = $_SESSION['login'];
 
 $sql = "SELECT U.idUzytkownicy AS idUzytkownik, U.login, P.DataRejestracji, P.url_profilowe, P.opis 
         FROM Uzytkownicy U 
@@ -22,11 +23,32 @@ if($result = @$connection->query($sql)) {
 
     $data["data_rejestracji"] = $data_rejestracji; 
 
+    // dodaj URL obrazu profilowego i opis do tablicy danych
+    $data["url_profilowe"] = $row["url_profilowe"];
+    $data["opis"] = $row["opis"];
+
     $result->close();
   }
   else {
     echo "Błąd! Nie znaleziono użytkownika.";
   }
+}
+
+$stmt = $connection->prepare("SELECT idProfilUzytkownika FROM ProfilUzytkownika INNER JOIN uzytkownicy ON ProfilUzytkownika.idUzytkownik = uzytkownicy.idUzytkownicy WHERE login = ?");
+$stmt->bind_param("s", $userLogin);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+$userId = $row['idProfilUzytkownika'];
+
+$sqltabela = "SELECT f.idFilmy AS idFilmu, o.idProfilUzytkownika AS idProfiluUzytkownika, f.Tytul AS nazwaFilmu, CASE WHEN uf.idFilmy IS NULL THEN 'NIE' ELSE 'TAK' END AS CzyUlubione, o.LiczbaGwiazdek AS iloscGwiazdek FROM filmy f JOIN oceny o ON f.idFilmy = o.idFilmy LEFT JOIN ulubionefilmy uf ON f.idFilmy = uf.idFilmy AND o.idProfilUzytkownika = uf.idProfilUzytkownika WHERE o.idProfilUzytkownika = ".$userId.";";
+
+if($result = @$connection->query($sqltabela)) {
+  $filmy = [];
+  while($row = $result->fetch_assoc()) {
+    $filmy[] = $row;
+  }
+  $result->close();
 }
 
 $connection->close();
@@ -48,14 +70,14 @@ $connection->close();
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
     <div class="d-flex align-items-center">
-      <a class="navbar-brand" href="#">NGRVideo</a>
+      <a class="navbar-brand" href="index.php">NGRVideo</a>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="#">Baza filmów</a>
+          <a class="nav-link" href="datamovies.php">Baza filmów</a>
         </li>
       </ul>
-      <form class="d-flex mx-3" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <form class="d-flex mx-3" action="search.php" method="POST" role="search">
+        <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
     </div>
@@ -69,7 +91,7 @@ $connection->close();
 						} 
             else {
               echo '<li class="navbar-text">Witaj, '.$_SESSION["login"].'</li>';
-							echo '<li class="nav-item"><a class="nav-link" href="profil.php">Profil</a></li>';
+							echo '<li class="nav-item"><a class="nav-link" href="profile.php">Profil</a></li>';
               echo '<li class="nav-item"><a class="nav-link" href="logout.php">Wyloguj się</a></li>';
 						
 						}
@@ -81,16 +103,12 @@ $connection->close();
 </nav>
 <div class="container">
     <div class="main-body">
-    
-       
-         
-    
           <div class="row gutters-sm mt-5">
             <div class="col-md-4 mb-3">
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex flex-column align-items-center text-center">
-                    <img src="https://placehold.jp/50x50.png" alt="Admin" class="rounded-circle" width="150">
+                    <img src="<?php echo $data["url_profilowe"]; ?>" alt="Admin" class="rounded-circle shadow-4" width="150">
                     <h4>
                       <?php
                       echo $_SESSION["login"];
@@ -121,57 +139,54 @@ $connection->close();
                       <h6 class="mb-0">Opis</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                    <?php echo $data["opis"]; ?>
                     </div>
-                    <hr>
                   </div>
+                  <hr>
                   <div class="row">
                     <div class="col-sm-3">
                       <h6 class="mb-0">Data dołączenia</h6>
                     </div>
-                    <div class="col-sm-9 text-secondary">
+                    <div class="col-sm-9 text-secondary pb-4">
                  <?php 
                  echo $data["data_rejestracji"]; 
                  ?>
+                    </div>
+                    <hr>
+                <div class="row">
+                    <div class="col-sm-12">
+                      <a class="btn btn-primary" target="__blank" href="update.php">Edytuj</a>
+                    </div>
                 </div>
                   </div>
                   </div>
                 </div>
               </div>
-              <h5>Ulubione filmy</h5>
-              <div id="carouselExample" class="carousel slide">
-                <div class="carousel-inner">
-                  <div class="carousel-item active">
-                    <img src="https://placehold.jp/500x500.png" class="d-block w-100" alt="...">
-                  </div>
-                  <div class="carousel-item">
-                    <img src="https://placehold.jp/500x500.png" class="d-block w-100" alt="...">
-                  </div>
-                  <div class="carousel-item">
-                    <img src="https://placehold.jp/500x500.png" class="d-block w-100" alt="...">
-                  </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Next</span>
-                </button>
-              </div>
-
-
-
+              <h5>Lista ocenionych filmów</h5>
+              <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID filmu</th>
+      <th scope="col">Nazwa filmu</th>
+      <th scope="col">Czy ulubiony?</th>
+      <th scope="col">Ilość gwiazdek</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php foreach ($filmy as $film): ?>
+    <tr>
+      <th scope="row"><?php echo $film["idFilmu"]; ?></th>
+      <td><a href="moviepage.php?id=<?php echo $film["idFilmu"]; ?>"><?php echo $film["nazwaFilmu"]; ?></a></td>
+      <td><?php echo $film["CzyUlubione"]; ?></td>
+      <td><?php echo $film["iloscGwiazdek"]; ?></td>
+    </tr>
+    <?php endforeach; ?>
+  </tbody>
+</table>
             </div>
           </div>
-
         </div>
     </div>
-	</div>
-
-
-
 
 </body>
 </html>
