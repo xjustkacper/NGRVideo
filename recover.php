@@ -1,18 +1,23 @@
 <?php
 session_start();
 
+// Sprawdzanie, czy użytkownik jest zalogowany i przekierowanie na stronę główną, jeśli tak
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     header("Location: index.php");
     exit;
 }
 
+// Sprawdzanie, czy istnieje zmienna sesyjna "error"
 if (isset($_SESSION["error"])) {
+    // Przypisanie wartości zmiennej "error" i usunięcie zmiennej sesyjnej "error"
     $error = $_SESSION["error"];
     unset($_SESSION["error"]);
 } else {
+    // Jeśli nie istnieje zmienna sesyjna "error", przypisanie pustej wartości do zmiennej "error"
     $error = "";
 }
 ?>
+
 
 <!doctype html>
 <html lang="pl">
