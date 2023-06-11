@@ -1,13 +1,20 @@
 <?php
 session_start();
 require_once "connect.php";
+
+// Sprawdzenie, czy użytkownik jest zalogowany
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
   header("Location: index.php");
   exit;
 }
+
+// Nawiązanie połączenia z bazą danych na podstawie danych z pliku connect.php
 $connection = @new mysqli($host, $db_user, $db_pass, $db_name);
+
+// Pobranie loginu użytkownika z sesji
 $userLogin = $_SESSION['login'];
 
+// Pobranie danych użytkownika z bazy danych
 $sql = "SELECT U.idUzytkownicy AS idUzytkownik, U.login, P.DataRejestracji, P.url_profilowe, P.opis 
         FROM Uzytkownicy U 
         INNER JOIN ProfilUzytkownika P ON U.idUzytkownicy = P.idUzytkownik 
@@ -19,11 +26,13 @@ if($result = @$connection->query($sql)) {
   if($hm_usr > 0) {
     $row = $result->fetch_assoc();
 
+    // Przetworzenie daty rejestracji na format RRRR-MM-DD
     $data_rejestracji = date("Y-m-d", strtotime($row["DataRejestracji"])); 
 
+    // Dodanie daty rejestracji do tablicy danych
     $data["data_rejestracji"] = $data_rejestracji; 
 
-    // dodaj URL obrazu profilowego i opis do tablicy danych
+    // Dodanie URL obrazu profilowego i opisu do tablicy danych
     $data["url_profilowe"] = $row["url_profilowe"];
     $data["opis"] = $row["opis"];
 
@@ -34,6 +43,7 @@ if($result = @$connection->query($sql)) {
   }
 }
 
+// Pobranie identyfikatora profilu użytkownika na podstawie loginu
 $stmt = $connection->prepare("SELECT idProfilUzytkownika FROM ProfilUzytkownika INNER JOIN uzytkownicy ON ProfilUzytkownika.idUzytkownik = uzytkownicy.idUzytkownicy WHERE login = ?");
 $stmt->bind_param("s", $userLogin);
 $stmt->execute();
@@ -41,6 +51,7 @@ $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 $userId = $row['idProfilUzytkownika'];
 
+// Pobranie danych filmów ocenianych przez użytkownika z bazy danych
 $sqltabela = "SELECT f.idFilmy AS idFilmu, o.idProfilUzytkownika AS idProfiluUzytkownika, f.Tytul AS nazwaFilmu, CASE WHEN uf.idFilmy IS NULL THEN 'NIE' ELSE 'TAK' END AS CzyUlubione, o.LiczbaGwiazdek AS iloscGwiazdek FROM filmy f JOIN oceny o ON f.idFilmy = o.idFilmy LEFT JOIN ulubionefilmy uf ON f.idFilmy = uf.idFilmy AND o.idProfilUzytkownika = uf.idProfilUzytkownika WHERE o.idProfilUzytkownika = ".$userId.";";
 
 if($result = @$connection->query($sqltabela)) {
@@ -53,6 +64,7 @@ if($result = @$connection->query($sqltabela)) {
 
 $connection->close();
 ?>
+
 
 
 <!DOCTYPE html>
