@@ -2,23 +2,25 @@
 session_start();
 require_once "connect.php";
 
-
+// Sprawdzenie, czy użytkownik jest zalogowany
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
   header("Location: login.php");
-    exit;
+  exit;
 } 
 
+// Pobranie loginu użytkownika, jeśli jest zalogowany
 if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true){
   $userLogin = $_SESSION['login'];
 } else {
   $userLogin = '';
 }
 
+// Pobranie identyfikatora filmu, jeśli jest przekazywany w parametrze GET
 if (isset($_GET['id'])) {
   $idFilmy = $_GET['id'];
 } 
 
-// Pobierz szczegółowe informacje o filmie z bazy danych
+// Pobranie szczegółowych informacji o filmie z bazy danych
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
 $sql = "SELECT f.idFilmy, l.url AS 'Link', f.Tytul, f.opis, f.rezyser, f.rokprodukcji, f.czastrwania, k.Nazwa AS 'kategoria', f.Jezyk, f.url_baner 
 FROM filmy f 
@@ -26,8 +28,6 @@ INNER JOIN linki l ON f.idLinki = l.idLinki
 INNER JOIN kategorie k ON f.idKategoria = k.idKategorie 
 WHERE f.idFilmy = ?";
 
-
-; 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $idFilmy);
 $stmt->execute();
@@ -39,60 +39,64 @@ $film = $result->fetch_assoc();
 $stmt->close();
 $movieId = $idFilmy;
 
-  $stmt = $conn->prepare("SELECT idProfilUzytkownika FROM ProfilUzytkownika INNER JOIN uzytkownicy ON ProfilUzytkownika.idUzytkownik = uzytkownicy.idUzytkownicy WHERE login = ?");
-  $stmt->bind_param("s", $userLogin);
-  $stmt->execute();
-  $result = $stmt->get_result();
-  $row = $result->fetch_assoc();
-  $userId = $row['idProfilUzytkownika'];  // Pobranie ID profilu użytkownika z wyniku zapytania
+// Pobranie ID profilu użytkownika na podstawie loginu
+$stmt = $conn->prepare("SELECT idProfilUzytkownika FROM ProfilUzytkownika INNER JOIN uzytkownicy ON ProfilUzytkownika.idUzytkownik = uzytkownicy.idUzytkownicy WHERE login = ?");
+$stmt->bind_param("s", $userLogin);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+$userId = $row['idProfilUzytkownika'];  // Pobranie ID profilu użytkownika z wyniku zapytania
 
+// Pobranie oceny użytkownika dla danego filmu
+$stmt = $conn->prepare("SELECT LiczbaGwiazdek FROM oceny WHERE idFilmy=? AND idProfilUzytkownika=?");
+$stmt->bind_param("ii", $movieId, $userId);
+$stmt->execute();
+$resultt = $stmt->get_result();
 
-  $stmt = $conn->prepare("SELECT LiczbaGwiazdek FROM oceny WHERE idFilmy=? AND idProfilUzytkownika=?");
-  $stmt->bind_param("ii", $movieId, $userId);
-  $stmt->execute();
-  $resultt = $stmt->get_result();
-  if($resultt->num_rows > 0) {
-      $row = $resultt->fetch_assoc();
-      $numberofstars = $row['LiczbaGwiazdek'];
-  } else {
-      $numberofstars = 0;
-  }
-  $stmt->close();
+// Jeśli istnieje ocena użytkownika dla tego filmu, przypisz ją do zmiennej $numberofstars, w przeciwnym razie przypisz 0
+if($resultt->num_rows > 0) {
+    $row = $resultt->fetch_assoc();
+    $numberofstars = $row['LiczbaGwiazdek'];
+} else {
+    $numberofstars = 0;
+}
+$stmt->close();
 
-  
 // Obsługa dodawania komentarza
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['comment'])) {
   $komentarz = $_POST['comment'];
-  
 
-  // Teraz dodajemy komentarz do bazy
+  // Dodanie komentarza do bazy danych
   $stmt = $conn->prepare("INSERT INTO komentarze (idProfilUzytkownika, idFilmy, komentarz) VALUES (?, ?, ?)");
   $stmt->bind_param("iis", $userId, $idFilmy, $komentarz);
   $stmt->execute(); 
   $stmt->close();
 }
 
-// Pobranie komentarzy
+// Pobranie komentarzy dla danego filmu
 $sqlk = "SELECT komentarze.*, uzytkownicy.login, profiluzytkownika.url_profilowe FROM komentarze JOIN profiluzytkownika ON komentarze.idProfilUzytkownika = profiluzytkownika.idProfilUzytkownika JOIN uzytkownicy ON profiluzytkownika.idUzytkownik = uzytkownicy.idUzytkownicy WHERE komentarze.idFilmy = ? ORDER BY komentarze.idKomentarze DESC";
+
 if ($stmt = $conn->prepare($sqlk)) {
   $stmt->bind_param("i", $idFilmy);
   $stmt->execute();
   $result = $stmt->get_result();
   $comments = $result->fetch_all(MYSQLI_ASSOC);
   $stmt->close();
-} 
-else {
+} else {
   echo "Błąd: " . $conn->error;
 }
 
+// Obsługa oceny filmu przez użytkownika
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rating'])) {
   $rating = $_POST['rating'];
   
+  // Sprawdzenie, czy użytkownik już ocenił ten film
   $stmt = $conn->prepare("SELECT * FROM oceny WHERE idFilmy=? AND idProfilUzytkownika=?");
   $stmt->bind_param("ii", $movieId, $userId);
   $stmt->execute();
   $result = $stmt->get_result();
 
+  // Jeśli użytkownik już ocenił, zaktualizuj ocenę w bazie danych, w przeciwnym razie dodaj nową ocenę
   if ($result->num_rows > 0) {
       $stmt = $conn->prepare("UPDATE oceny SET LiczbaGwiazdek=? WHERE idFilmy=? AND idProfilUzytkownika=?");
       $stmt->bind_param("iii", $rating, $movieId, $userId);
@@ -104,28 +108,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rating'])) {
   $stmt->execute(); 
   $stmt->close();
 
+  // Pobranie aktualnej oceny użytkownika dla filmu
   $stmt = $conn->prepare("SELECT LiczbaGwiazdek FROM oceny WHERE idFilmy=? AND idProfilUzytkownika=?");
-$stmt->bind_param("ii", $movieId, $userId);
-$stmt->execute();
-$resultt = $stmt->get_result();
-if($resultt->num_rows > 0) {
+  $stmt->bind_param("ii", $movieId, $userId);
+  $stmt->execute();
+  $resultt = $stmt->get_result();
+
+  // Jeśli istnieje ocena użytkownika dla tego filmu, przypisz ją do zmiennej $numberofstars, w przeciwnym razie przypisz 0
+  if($resultt->num_rows > 0) {
     $row = $resultt->fetch_assoc();
     $numberofstars = $row['LiczbaGwiazdek'];
-} else {
+  } else {
     $numberofstars = 0;
-}
-$stmt->close();
-
-  
+  }
+  $stmt->close();
 
   echo $numberofstars;
   exit();
 }
+
+// Obsługa dodawania/usuwanie filmu z ulubionych
 if(isset($_POST['toggle-favorite'])) {
   $check = $conn->prepare("SELECT * FROM ulubioneFilmy WHERE idFilmy=? AND idProfilUzytkownika=?");
   $check->bind_param('ii', $idFilmy, $userId);
   $check->execute();
   $result = $check->get_result();
+
+  // Jeśli film nie jest w ulubionych, dodaj go; w przeciwnym razie usuń z ulubionych
   if($result->num_rows === 0) {
       $stmt = $conn->prepare("INSERT INTO ulubioneFilmy (idFilmy, idProfilUzytkownika) VALUES (?, ?)");
       $stmt->bind_param('ii', $idFilmy, $userId);
@@ -135,16 +144,17 @@ if(isset($_POST['toggle-favorite'])) {
   }
   $stmt->execute();
 }
+
+// Sprawdzenie, czy film jest w ulubionych dla danego użytkownika
 $check = $conn->prepare("SELECT * FROM ulubioneFilmy WHERE idFilmy=? AND idProfilUzytkownika=?");
 $check->bind_param('ii', $idFilmy, $userId);
 $check->execute();
 $result = $check->get_result();
 $favorite = $result->num_rows !== 0;
 
-
-
 $conn->close();
 ?>
+
 
 
 <!DOCTYPE html>
