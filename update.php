@@ -2,11 +2,13 @@
 session_start();
 require_once "connect.php";
 
+// Nawiązanie połączenia z bazą danych na podstawie danych z pliku connect.php
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
+
 $url_profilowe = '';
 $opis = '';
 
-// Fetch user's profile url and opis
+// Pobranie URL profilowego i opisu użytkownika
 $sqlFetchUrlOpis = "SELECT `url_profilowe`, `opis` FROM `profiluzytkownika` WHERE `idUzytkownik` = (SELECT `idUzytkownicy` FROM `uzytkownicy` WHERE `login` = ?)";
 if ($stmt = $conn->prepare($sqlFetchUrlOpis)) {
     $stmt->bind_param("s", $_SESSION["login"]);
@@ -16,12 +18,12 @@ if ($stmt = $conn->prepare($sqlFetchUrlOpis)) {
     $stmt->close();
 }
 
-// Default url
+// Ustawienie domyślnego URL profilowego, jeśli jest pusty
 if (empty($url_profilowe)) {
     $url_profilowe = 'https://placehold.jp/50x50.png';
 }
 
-// Update user's profile url
+// Aktualizacja URL profilowego użytkownika
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["new_url"])) {
         $new_url = $_POST["new_url"];
@@ -43,7 +45,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pl">
