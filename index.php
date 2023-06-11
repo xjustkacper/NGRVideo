@@ -1,45 +1,58 @@
 <?php
+// Rozpoczęcie sesji, które umożliwia przechowywanie danych w czasie trwania sesji.
 session_start();
+
+// Dołączenie pliku zawierającego dane do połączenia z bazą danych.
 require_once "connect.php";
 
+// Utworzenie nowego obiektu MySQLi używając danych z pliku connect.php
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
 
+// SQL zapytanie do pobrania top 10 filmów z najwyższymi ocenami.
 $sqltop10 = "SELECT f.Tytul,f.url_baner, AVG(o.LiczbaGwiazdek) AS SredniaOcena,f.idFilmy FROM filmy f JOIN oceny o ON f.idFilmy = o.idFilmy GROUP BY f.idFilmy, f.Tytul ORDER BY SredniaOcena DESC LIMIT 10;"; 
+
+// SQL zapytanie do pobrania 10 najnowszych filmów.
 $sql2 = "SELECT * FROM `filmy` ORDER BY idFilmy DESC LIMIT 10;";
 
+// Przygotowanie i wykonanie pierwszego zapytania SQL.
 $stmt = $conn->prepare($sqltop10);
 $stmt->execute();
 $result = $stmt->get_result();
 
+// Zapisanie wyników zapytania do tablicy.
 $tytul = [];
 while ($row = $result->fetch_assoc()) {
     $tytul[] = $row;
 }
 
+// Przygotowanie i wykonanie drugiego zapytania SQL.
 $stmt2 = $conn->prepare($sql2);
 $stmt2->execute();
 $result2 = $stmt2->get_result();
 
+// Zapisanie wyników drugiego zapytania do tablicy.
 $najnowsze = [];
 while ($row = $result2->fetch_assoc()) {
     $najnowsze[] = $row;
 }
 
-// Losowanie id reklamy
+// Losowanie id reklamy.
 $idReklama = rand(1, 2);  // Zakładam, że id reklam są od 1 do 2.
 
-// Zapytanie do pobrania reklamy
+// Zapytanie do pobrania reklamy.
 $sqlReklama = "SELECT url_reklama FROM reklama WHERE idReklama = ?";
 $stmtReklama = $conn->prepare($sqlReklama);
 $stmtReklama->bind_param("i", $idReklama);
 $stmtReklama->execute();
 $resultReklama = $stmtReklama->get_result();
 
+// Zapisanie wyników zapytania o reklamę do tablicy.
 $reklama = [];
 while ($row = $resultReklama->fetch_assoc()) {
     $reklama[] = $row;
 }
 
+// Zamknięcie wszystkich zapytań i połączenia z bazą danych.
 $stmtReklama->close();
 $stmt->close();
 $stmt2->close();
