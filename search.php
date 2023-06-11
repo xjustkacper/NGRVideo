@@ -2,26 +2,34 @@
 session_start();
 require_once "connect.php";
 
+// Nawiązanie połączenia z bazą danych na podstawie danych z pliku connect.php
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
 
+// Pobranie frazy wyszukiwania z żądania POST i przetworzenie jej
 $search = strtolower(preg_replace('/\s+/', '', $conn->real_escape_string($_POST["search"])));
+
+// Zapytanie SQL pobierające filmy na podstawie frazy wyszukiwania
 $sql = "SELECT Filmy.*, Kategorie.Nazwa AS kategoria,Filmy.idFilmy 
         FROM Filmy
         JOIN Kategorie ON Filmy.idKategoria = Kategorie.idKategorie
         WHERE LOWER(REPLACE(Tytul, ' ', '')) LIKE '%$search%'";
 
+// Przygotowanie i wykonanie zapytania SQL
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $result = $stmt->get_result();
 
+// Przetwarzanie wyników zapytania i zapisywanie ich do tablicy $filmy
 $filmy = [];
 while ($row = $result->fetch_assoc()) {
     $filmy[] = $row;
 }
 
+// Zamknięcie przygotowanego zapytania i połączenia z bazą danych
 $stmt->close();
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pl">
