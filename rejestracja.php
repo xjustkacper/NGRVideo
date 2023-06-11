@@ -18,8 +18,8 @@ $connection = @new mysqli($host, $db_user, $db_pass, $db_name);
 
     $login = $_POST["login"];
     $haslo = $_POST["haslo"];
-    $PytaniePomocnicze = $_POST["PytaniePomocnicze"];
-    $OdpowiedzPomocnicza = $_POST["OdpowiedzPomocnicza"];
+    $PytaniePomocnicze = $_POST["pytanie"];
+    $OdpowiedzPomocnicza = $_POST["odpowiedz"];
     
     // sprawdzenie, czy login już istnieje w bazie danych
     $sql_check = "SELECT * FROM Uzytkownicy WHERE login='$login'";
