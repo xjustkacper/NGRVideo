@@ -1,15 +1,19 @@
 <?php
+// Rozpoczyna sesję
 session_start();
 require_once "connect.php"; // Plik z danymi do połączenia z bazą danych
 
+// Sprawdza, czy w żądaniu GET jest parametr 'kategoria', jeżeli nie, ustawia kategorię na 'all'
 if (isset($_GET['kategoria'])) {
     $kategoria = $_GET['kategoria'];
 } else {
     $kategoria = 'all';
 }
 
-$conn = new mysqli($host, $db_user, $db_pass, $db_name);
+$conn = new mysqli($host, $db_user, $db_pass, $db_name); // Nawiązuje połączenie z bazą danych
 
+// Jeżeli kategoria nie jest 'all', to przygotowuje zapytanie SQL do pobrania filmów danej kategorii
+// W przeciwnym razie, przygotowuje zapytanie do pobrania wszystkich filmów
 if ($kategoria !== 'all') {
     $sql = "SELECT Filmy.*, Kategorie.Nazwa AS kategoria 
             FROM Filmy
@@ -24,28 +28,28 @@ if ($kategoria !== 'all') {
     $stmt = $conn->prepare($sql);
 }
 
-$stmt->execute();
-$result = $stmt->get_result();
+$stmt->execute(); // Wykonuje zapytanie SQL
+$result = $stmt->get_result(); // Pobiera wyniki zapytania
 
-$filmy = [];
+$filmy = []; // Zapisuje wyniki zapytania do tablicy $filmy
 while ($row = $result->fetch_assoc()) {
     $filmy[] = $row;
 }
 
-$stmt->close();
+$stmt->close(); // Zamyka zapytanie
 
-$sql = "SELECT DISTINCT Nazwa FROM Kategorie";
+$sql = "SELECT DISTINCT Nazwa FROM Kategorie"; // Przygotowuje zapytanie SQL do pobrania unikalnych nazw kategorii
 $categories_stmt = $conn->prepare($sql);
 $categories_stmt->execute();
 $categories_result = $categories_stmt->get_result();
 
-$categories = [];
+$categories = []; // Zapisuje wyniki zapytania do tablicy $categories
 while ($category = $categories_result->fetch_assoc()) {
     $categories[] = $category;
 }
 
-$categories_stmt->close();
-$conn->close();
+$categories_stmt->close(); // Zamyka zapytanie
+$conn->close(); // Zamyka połączenie z bazą danych
 ?>
 
 <!DOCTYPE html>
