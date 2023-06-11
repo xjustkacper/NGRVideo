@@ -1,13 +1,19 @@
 <?php
+// Ustawianie poziomu raportowania błędów
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+// Wyłączanie wyświetlania błędów
 ini_set('display_errors', 'Off');
+// Rozpoczynanie sesji
 session_start();
 
+// Sprawdzanie, czy użytkownik jest już zalogowany
+// Jeżeli tak, przekierowanie go na stronę główną
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     header("Location: index.php");
     exit;
 }
 
+// Wyświetlanie komunikatu o błędzie, jeżeli wystąpił
 if (isset($_SESSION["error"]) && $_SESSION["error"] === true) {
     $error = '<div class="alert alert-danger mt-3" role="alert"><strong>Nieprawidłowy login lub hasło!</strong></div>';
     $_SESSION["error"] = false;
